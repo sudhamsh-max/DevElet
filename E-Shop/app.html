@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulated E-Commerce Platform</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        /* Custom styles for the message box */
+        #messageBox {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            color: #fff;
+            z-index: 1000;
+            display: none;
+            text-align: center;
+        }
+        .success {
+            background-color: #48bb78; /* Green-500 */
+        }
+        .error {
+            background-color: #f56565; /* Red-500 */
+        }
+        .info {
+            background-color: #4299e1; /* Blue-500 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Message Box for alerts -->
+    <div id="messageBox" class="rounded-lg shadow-lg"></div>
+
+    <!-- Main Navigation Bar -->
+    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex items-center justify-between">
+            <a href="#" class="text-2xl font-bold text-gray-800" onclick="showView('home')">E-Shop</a>
+            <div class="flex items-center space-x-4">
+                <input type="text" id="searchInput" class="px-4 py-2 border rounded-full w-48 focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Search products...">
+                <button id="searchButton" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 ease-in-out">Search</button>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="cartBtn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-full hover:bg-gray-300 transition duration-300 ease-in-out" onclick="showView('cart')">
+                    Cart (<span id="cartCount">0</span>)
+                </button>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 ease-in-out" onclick="showView('login')">
+                    Login
+                </button>
+                <button id="logoutBtn" class="bg-red-600 text-white px-4 py-2 rounded-full hover:bg-red-700 transition duration-300 ease-in-out hidden" onclick="handleLogout()">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+
+        <!-- Login/Signup Section -->
+        <div id="loginSection" class="view hidden">
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto mt-10">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Login / Sign Up</h2>
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="loginEmail" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="loginPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="loginPassword" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out">Log In</button>
+                </form>
+                <p class="text-center text-gray-600 mt-4">
+                    Don't have an account?
+                    <button id="signupLink" class="text-blue-600 hover:underline">Sign Up</button>
+                </p>
+                <form id="signupForm" class="space-y-4 mt-6 hidden">
+                    <div>
+                        <label for="signupName" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="signupName" name="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="signupEmail" class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="signupEmail" name="email" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label for="signupPassword" class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="signupPassword" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" required>
+                    </div>
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300 ease-in-out">Sign Up</button>
+                    <p class="text-center text-gray-600 mt-4">
+                        Already have an account?
+                        <button id="loginLink" class="text-blue-600 hover:underline">Log In</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Home Section - Product Grid -->
+        <div id="homeSection" class="view">
+            <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Featured Products</h1>
+            <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <!-- Products will be rendered here by JS -->
+            </div>
+        </div>
+
+        <!-- Cart Section -->
+        <div id="cartSection" class="view hidden">
+            <h1 class="text-4xl font-bold text-gray-800 mb-6 text-center">Your Shopping Cart</h1>
+            <div id="cartList" class="space-y-4">
+                <!-- Cart items will be rendered here by JS -->
+            </div>
+            <div id="cartSummary" class="mt-8 p-6 bg-white rounded-lg shadow-lg flex flex-col items-end">
+                <div class="text-xl font-semibold text-gray-800">
+                    Total: <span id="cartTotal">₹0.00</span>
+                </div>
+                <button id="checkoutBtn" class="mt-4 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 transition duration-300 ease-in-out disabled:opacity-50" disabled>
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+        
+        <!-- Order Confirmation Section -->
+        <div id="orderConfirmationSection" class="view hidden">
+            <div class="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto mt-10 text-center">
+                <h2 class="text-3xl font-bold text-green-600 mb-4">Order Placed!</h2>
+                <p class="text-lg text-gray-700 mb-4">Thank you for your purchase. Your order has been successfully placed and will be delivered soon.</p>
+                <div id="orderSummary" class="border-t border-gray-200 pt-4 mt-4 text-left">
+                    <!-- Order details will be rendered here -->
+                </div>
+                <button class="mt-6 bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition duration-300 ease-in-out" onclick="showView('home')">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Simulated Database & State Management ---
+        const products = [
+            { id: 1, name: "Noise Cancelling Headphones", price: 15000, description: "Immerse yourself in pure sound with our active noise-cancelling headphones.", image: "https://placehold.co/400x300/F56565/FFFFFF?text=Headphones" },
+            { id: 2, name: "Smart Watch", price: 8000, description: "Stay connected and track your fitness goals with this stylish smartwatch.", image: "https://placehold.co/400x300/4299E1/FFFFFF?text=Smart+Watch" },
+            { id: 3, name: "Mechanical Keyboard", price: 6500, description: "Experience superior typing feel with our durable and customizable mechanical keyboard.", image: "https://placehold.co/400x300/48BB78/FFFFFF?text=Keyboard" },
+            { id: 4, name: "4K UHD Monitor", price: 25000, description: "Crystal clear visuals for work and gaming on a vibrant 4K UHD display.", image: "https://placehold.co/400x300/ED8936/FFFFFF?text=Monitor" },
+            { id: 5, name: "Ergonomic Office Chair", price: 12000, description: "Support your back and sit in comfort with this ergonomic office chair.", image: "https://placehold.co/400x300/9F7AEA/FFFFFF?text=Chair" },
+            { id: 6, name: "Bluetooth Speaker", price: 4000, description: "Portable and powerful sound, perfect for parties and outdoor adventures.", image: "https://placehold.co/400x300/ECC94B/FFFFFF?text=Speaker" },
+            { id: 7, name: "Laptop Sleeve", price: 1500, description: "Protect your laptop from scratches and bumps with this sleek, padded sleeve.", image: "https://placehold.co/400x300/B83280/FFFFFF?text=Sleeve" },
+            { id: 8, name: "Webcam Full HD", price: 3000, description: "Crystal clear video calls and streaming with a high-definition webcam.", image: "https://placehold.co/400x300/38B2AC/FFFFFF?text=Webcam" }
+        ];
+
+        const users = [
+            { email: "user@example.com", password: "password123", name: "Guest User" }
+        ];
+
+        let cartItems = [];
+        let currentUser = null;
+        let currentView = 'home';
+        let orders = [];
+
+        // --- DOM Elements ---
+        const views = document.querySelectorAll('.view');
+        const loginSection = document.getElementById('loginSection');
+        const homeSection = document.getElementById('homeSection');
+        const cartSection = document.getElementById('cartSection');
+        const orderConfirmationSection = document.getElementById('orderConfirmationSection');
+        const productList = document.getElementById('productList');
+        const cartList = document.getElementById('cartList');
+        const cartCountSpan = document.getElementById('cartCount');
+        const cartTotalSpan = document.getElementById('cartTotal');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const orderSummaryDiv = document.getElementById('orderSummary');
+        const signupLink = document.getElementById('signupLink');
+        const loginLink = document.getElementById('loginLink');
+        const messageBox = document.getElementById('messageBox');
+
+        // --- Helper Functions ---
+        // Function to show custom message boxes
+        function showMessage(message, type = 'info', duration = 3000) {
+            messageBox.textContent = message;
+            messageBox.className = `rounded-lg shadow-lg ${type}`;
+            messageBox.style.display = 'block';
+
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, duration);
+        }
+
+        // Function to show a specific view and hide others
+        function showView(viewName) {
+            views.forEach(view => view.classList.add('hidden'));
+            document.getElementById(`${viewName}Section`).classList.remove('hidden');
+            currentView = viewName;
+        }
+
+        // Function to update the UI based on the user's login status
+        function updateUI() {
+            if (currentUser) {
+                loginBtn.classList.add('hidden');
+                logoutBtn.classList.remove('hidden');
+                showMessage(`Welcome, ${currentUser.name}!`, 'success', 2000);
+            } else {
+                loginBtn.classList.remove('hidden');
+                logoutBtn.classList.add('hidden');
+            }
+        }
+
+        // --- Render Functions ---
+        function renderProducts(filteredProducts = products) {
+            productList.innerHTML = '';
+            if (filteredProducts.length === 0) {
+                productList.innerHTML = '<p class="text-center text-gray-500 text-lg col-span-full">No products found. Please try a different search term.</p>';
+                return;
+            }
+            filteredProducts.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'bg-white rounded-lg shadow-lg overflow-hidden transition-transform duration-300 transform hover:scale-105';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-2 text-gray-800">${product.name}</h3>
+                        <p class="text-gray-600 text-sm mb-4">${product.description}</p>
+                        <div class="flex items-center justify-between">
+                            <span class="text-blue-600 font-bold text-2xl">₹${product.price.toLocaleString('en-IN')}</span>
+                            <button onclick="addToCart(${product.id})" class="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300 ease-in-out">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productList.appendChild(productCard);
+            });
+        }
+
+        function renderCart() {
+            cartList.innerHTML = '';
+            let total = 0;
+            if (cartItems.length === 0) {
+                cartList.innerHTML = '<p class="text-center text-gray-500 text-lg">Your cart is empty.</p>';
+                checkoutBtn.disabled = true;
+            } else {
+                checkoutBtn.disabled = false;
+                cartItems.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    total += product.price * item.quantity;
+                    const cartItem = document.createElement('div');
+                    cartItem.className = 'flex items-center justify-between bg-white p-4 rounded-lg shadow-md';
+                    cartItem.innerHTML = `
+                        <div class="flex items-center space-x-4">
+                            <img src="${product.image}" alt="${product.name}" class="w-16 h-16 rounded-lg object-cover">
+                            <div>
+                                <h4 class="font-semibold text-lg text-gray-800">${product.name}</h4>
+                                <p class="text-gray-500">₹${product.price.toLocaleString('en-IN')}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <span class="text-gray-600">Qty: ${item.quantity}</span>
+                            <button onclick="removeItem(${item.id})" class="text-red-600 hover:text-red-700 transition duration-300 ease-in-out">
+                                Remove
+                            </button>
+                        </div>
+                    `;
+                    cartList.appendChild(cartItem);
+                });
+            }
+            cartTotalSpan.textContent = `₹${total.toLocaleString('en-IN')}`;
+            cartCountSpan.textContent = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+        }
+
+        // --- Event Handlers ---
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                showView('home');
+                updateUI();
+                renderProducts(); // Re-render products for logged-in user if needed
+            } else {
+                showMessage("Invalid email or password.", 'error');
+            }
+        });
+
+        signupForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = e.target.email.value;
+            const password = e.target.password.value;
+            const name = e.target.name.value;
+            const existingUser = users.find(u => u.email === email);
+            if (existingUser) {
+                showMessage("An account with this email already exists.", 'error');
+            } else {
+                const newUser = { email, password, name };
+                users.push(newUser);
+                currentUser = newUser;
+                showView('home');
+                updateUI();
+                showMessage("Account created successfully!", 'success');
+            }
+        });
+
+        signupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+        });
+
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+        });
+
+        function handleLogout() {
+            currentUser = null;
+            cartItems = [];
+            updateUI();
+            showView('home');
+            renderProducts();
+            showMessage("You have been logged out.", 'info');
+        }
+
+        searchButton.addEventListener('click', () => {
+            const query = searchInput.value.toLowerCase();
+            const filtered = products.filter(product =>
+                product.name.toLowerCase().includes(query) ||
+                product.description.toLowerCase().includes(query)
+            );
+            renderProducts(filtered);
+            showView('home');
+        });
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!currentUser) {
+                showMessage("Please log in to add items to your cart.", 'error');
+                showView('login');
+                return;
+            }
+            const existingItem = cartItems.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity++;
+            } else {
+                cartItems.push({ id: productId, quantity: 1 });
+            }
+            showMessage(`${product.name} added to cart!`, 'success');
+            renderCart();
+        }
+
+        function removeItem(productId) {
+            const product = products.find(p => p.id === productId);
+            cartItems = cartItems.filter(item => item.id !== productId);
+            showMessage(`${product.name} removed from cart.`, 'info');
+            renderCart();
+        }
+
+        checkoutBtn.addEventListener('click', () => {
+            if (cartItems.length === 0) {
+                showMessage("Your cart is empty. Cannot checkout.", 'error');
+                return;
+            }
+            const orderId = orders.length + 1;
+            const newOrder = {
+                id: orderId,
+                userId: currentUser.email,
+                items: JSON.parse(JSON.stringify(cartItems)), // Deep copy cart items
+                total: cartItems.reduce((acc, item) => acc + products.find(p => p.id === item.id).price * item.quantity, 0),
+                date: new Date().toLocaleDateString()
+            };
+            orders.push(newOrder);
+            cartItems = []; // Clear the cart
+            renderCart();
+            renderOrderConfirmation(newOrder);
+            showView('orderConfirmation');
+            showMessage("Checkout successful!", 'success');
+        });
+        
+        function renderOrderConfirmation(order) {
+            orderSummaryDiv.innerHTML = `
+                <p class="text-sm text-gray-500 mb-2">Order ID: ${order.id}</p>
+                <p class="text-lg font-bold text-gray-800 mb-2">Items:</p>
+                <ul class="list-disc list-inside space-y-2">
+                    ${order.items.map(item => {
+                        const product = products.find(p => p.id === item.id);
+                        return `<li>${product.name} (Qty: ${item.quantity}) - ₹${(product.price * item.quantity).toLocaleString('en-IN')}</li>`;
+                    }).join('')}
+                </ul>
+                <p class="text-xl font-bold text-gray-800 mt-4">Total: ₹${order.total.toLocaleString('en-IN')}</p>
+            `;
+        }
+
+
+        // --- Initial App Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+            renderCart();
+            updateUI();
+            showView('home');
+        });
+    </script>
+
+</body>
+</html>
