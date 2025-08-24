@@ -150,7 +150,6 @@
     </div>
 
     <script>
-        // --- Simulated Database & State Management ---
         const products = [
             { id: 1, name: "Noise Cancelling Headphones", price: 15000, description: "Immerse yourself in pure sound with our active noise-cancelling headphones.", image: "https://placehold.co/400x300/F56565/FFFFFF?text=Headphones" },
             { id: 2, name: "Smart Watch", price: 8000, description: "Stay connected and track your fitness goals with this stylish smartwatch.", image: "https://placehold.co/400x300/4299E1/FFFFFF?text=Smart+Watch" },
@@ -171,7 +170,6 @@
         let currentView = 'home';
         let orders = [];
 
-        // --- DOM Elements ---
         const views = document.querySelectorAll('.view');
         const loginSection = document.getElementById('loginSection');
         const homeSection = document.getElementById('homeSection');
@@ -193,8 +191,6 @@
         const loginLink = document.getElementById('loginLink');
         const messageBox = document.getElementById('messageBox');
 
-        // --- Helper Functions ---
-        // Function to show custom message boxes
         function showMessage(message, type = 'info', duration = 3000) {
             messageBox.textContent = message;
             messageBox.className = `rounded-lg shadow-lg ${type}`;
@@ -205,14 +201,12 @@
             }, duration);
         }
 
-        // Function to show a specific view and hide others
         function showView(viewName) {
             views.forEach(view => view.classList.add('hidden'));
             document.getElementById(`${viewName}Section`).classList.remove('hidden');
             currentView = viewName;
         }
 
-        // Function to update the UI based on the user's login status
         function updateUI() {
             if (currentUser) {
                 loginBtn.classList.add('hidden');
@@ -224,7 +218,6 @@
             }
         }
 
-        // --- Render Functions ---
         function renderProducts(filteredProducts = products) {
             productList.innerHTML = '';
             if (filteredProducts.length === 0) {
@@ -286,7 +279,6 @@
             cartCountSpan.textContent = cartItems.reduce((acc, item) => acc + item.quantity, 0);
         }
 
-        // --- Event Handlers ---
         loginForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const email = e.target.email.value;
@@ -296,7 +288,7 @@
                 currentUser = user;
                 showView('home');
                 updateUI();
-                renderProducts(); // Re-render products for logged-in user if needed
+                renderProducts(); 
             } else {
                 showMessage("Invalid email or password.", 'error');
             }
@@ -384,7 +376,7 @@
             const newOrder = {
                 id: orderId,
                 userId: currentUser.email,
-                items: JSON.parse(JSON.stringify(cartItems)), // Deep copy cart items
+                items: JSON.parse(JSON.stringify(cartItems)),
                 total: cartItems.reduce((acc, item) => acc + products.find(p => p.id === item.id).price * item.quantity, 0),
                 date: new Date().toLocaleDateString()
             };
@@ -411,7 +403,6 @@
         }
 
 
-        // --- Initial App Load ---
         document.addEventListener('DOMContentLoaded', () => {
             renderProducts();
             renderCart();
@@ -422,3 +413,4 @@
 
 </body>
 </html>
+
